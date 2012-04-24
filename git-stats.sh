@@ -5,11 +5,11 @@ END_AND_BEGIN=
 while [ -n "$1" ]; do
     if [[ "$1" == "-s" ]]; then
         shift
-        END_AND_BEGIN=$(echo $END_AND_BEGIN --after=$1)
+        END_AND_BEGIN="$END_AND_BEGIN --after=$1"
     fi
     if [[ "$1" == "-e" ]]; then
         shift
-        END_AND_BEGIN=$(echo $END_AND_BEGIN --before=$1)
+        END_AND_BEGIN="$END_AND_BEGIN --before=$1"
     fi
     if [[ "$1" == '-w' ]]; then
         LOGOPTS="$LOGOPTS -w"
