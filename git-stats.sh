@@ -3,23 +3,25 @@ LOGOPTS=
 END_AND_BEGIN=
 #argument parsing
 while [ -n "$1" ]; do
-    if [[ "$1" == "-s" ]]; then
+    case "$1" in
+     "-s")
         shift
-        END_AND_BEGIN=$(echo $END_AND_BEGIN --after=$1)
-    fi
-    if [[ "$1" == "-e" ]]; then
+        END_AND_BEGIN="$END_AND_BEGIN --after=$1"
+    ;;
+    "-e")
         shift
-        END_AND_BEGIN=$(echo $END_AND_BEGIN --before=$1)
-    fi
-    if [[ "$1" == '-w' ]]; then
+        END_AND_BEGIN="$END_AND_BEGIN --before=$1"
+    ;;
+    "-w")
         LOGOPTS="$LOGOPTS -w"
-    fi
-    if [[ "$1" == '-C' ]]; then
+    ;;
+    "-C")
         LOGOPTS="$LOGOPTS -C --find-copies-harder"
-    fi
-    if [[ "$1" == '-M' ]]; then
+    ;;
+    "-M")
         LOGOPTS="$LOGOPTS -M"
-    fi
+    ;;
+    esac
     shift
 done
 
@@ -27,7 +29,7 @@ done
 git branch &> /dev/null || exit 3
 echo "Number of commits per author:"
 git --no-pager shortlog $END_AND_BEGIN  -sn --all
-AUTHORS=$( git shortlog $END_AND_BEGIN  -sn --all | cut -f2 | cut -f1 -d' ')
+AUTHORS=$(git shortlog $END_AND_BEGIN  -sn --all | cut -f2 | cut -f1 -d' ')
 
 for a in $AUTHORS
 do
