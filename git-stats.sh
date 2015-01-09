@@ -37,12 +37,12 @@ do
     echo '-------------------'
     echo "Statistics for: $a"
     echo -n "Number of files changed: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author=$a | grep -v -e "^$" | cut -f3 | sort -iu | wc -l
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | grep -v -e "^$" | cut -f3 | sort -iu | wc -l
     echo -n "Number of lines added: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author=$a | cut -f1 | awk '{s+=$1} END {print s}'
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | cut -f1 | awk '{s+=$1} END {print s}'
     echo -n "Number of lines deleted: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author=$a | cut -f2 | awk '{s+=$1} END {print s}'
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | cut -f2 | awk '{s+=$1} END {print s}'
     echo -n "Number of merges: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --merges --author=$a | grep -c '^commit'
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --merges --author="$a" | grep -c '^commit'
 
 done
