@@ -17,7 +17,7 @@ while [ -n "$1" ]; do
     ;;
     "-C")
         LOGOPTS+=("-C")
-		LOGOPTS+=("--find-copies-harder")
+	LOGOPTS+=("--find-copies-harder")
     ;;
     "-M")
         LOGOPTS+=("-M")
@@ -26,23 +26,24 @@ while [ -n "$1" ]; do
     shift
 done
 
-#test if the directory is a git
+# Test if the directory is a git
 git branch &> /dev/null || exit 3
 echo "Number of commits per author:"
 git --no-pager shortlog "${END_AND_BEGIN[@]}" -sn --all
-AUTHORS=$(git shortlog "${END_AND_BEGIN[@]}" -sn --all | cut -f2 | cut -f1 -d' ')
+AUTHORS="$(git shortlog "${END_AND_BEGIN[@]}" -sn --all | cut -f2 | cut -f1 -d' ')"
+
+longline='----------------------------------------------------------------------------------------------------------'
 
 for a in $AUTHORS
 do
-    echo '-------------------'
-    echo "Statistics for: $a"
-    echo -n "Number of files changed: "
+    echo -e "----------------${longline:0:${#a}}"
+    echo -e "Statistics for: $a"
+    echo -n "  - Number of files changed: "
     git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | grep -v -e "^$" | cut -f3 | sort -iu | wc -l
-    echo -n "Number of lines added: "
+    echo -n "  - Number of lines added: "
     git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | cut -f1 | awk '{s+=$1} END {print s}'
-    echo -n "Number of lines deleted: "
+    echo -n "  - Number of lines deleted: "
     git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | cut -f2 | awk '{s+=$1} END {print s}'
-    echo -n "Number of merges: "
+    echo -n "  - Number of merges: "
     git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --merges --author="$a" | grep -c '^commit'
-
 done
