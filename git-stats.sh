@@ -30,19 +30,19 @@ done
 git branch &> /dev/null || exit 3
 echo "Number of commits per author:"
 git --no-pager shortlog "${END_AND_BEGIN[@]}" -sn --all
-AUTHORS=$(git shortlog "${END_AND_BEGIN[@]}" -sn --all | cut -f2 | cut -f1 -d' ')
+AUTHORS=$(git shortlog "${END_AND_BEGIN[@]}" -sn --all | cut -f2)
 
-for a in $AUTHORS
+while read author
 do
     echo '-------------------'
-    echo "Statistics for: $a"
+    echo "Statistics for: $author"
     echo -n "Number of files changed: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | grep -v -e "^$" | cut -f3 | sort -iu | wc -l
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$author" | grep -v -e "^$" | cut -f3 | sort -iu | wc -l
     echo -n "Number of lines added: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | cut -f1 | awk '{s+=$1} END {print s}'
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$author" | cut -f1 | awk '{s+=$1} END {print s}'
     echo -n "Number of lines deleted: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$a" | cut -f2 | awk '{s+=$1} END {print s}'
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --numstat --format="%n" --author="$author" | cut -f2 | awk '{s+=$1} END {print s}'
     echo -n "Number of merges: "
-    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --merges --author="$a" | grep -c '^commit'
+    git log "${LOGOPTS[@]}" "${END_AND_BEGIN[@]}" --all --merges --author="$author" | grep -c '^commit'
 
-done
+done <<< "$AUTHORS"
